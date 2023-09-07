@@ -1,3 +1,7 @@
+## Signal processing library
+Contains common functionality for signal processing.
+Written purely in C without the standard library.
+
 ### Requirements
 #### googletest
 Used for unit testing only.
