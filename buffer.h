@@ -1,5 +1,5 @@
-#ifndef SIGNAL_PROCESSING_BUFFER_H
-#define SIGNAL_PROCESSING_BUFFER_H
+#ifndef SIGNAL_PROCESSING__BUFFER_H_
+#define SIGNAL_PROCESSING__BUFFER_H_
 
 typedef struct DoubleBuffer {
   float* buffer;  // Size is 2*size.
@@ -32,4 +32,4 @@ inline void double_buffer_update(const float* x, int in_size,
   double_buffer->oldest = (start + in_size) % buffer_size;
 }
 
-#endif  // SIGNAL_PROCESSING_BUFFER_H
+#endif  // SIGNAL_PROCESSING__BUFFER_H_

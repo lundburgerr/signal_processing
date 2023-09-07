@@ -1,5 +1,5 @@
-#ifndef SIGNAL_PROCESSING_FILTER_H
-#define SIGNAL_PROCESSING_FILTER_H
+#ifndef SIGNAL_PROCESSING__FILTER_H_
+#define SIGNAL_PROCESSING__FILTER_H_
 
 #include "buffer.h"
 
@@ -7,12 +7,24 @@
 // Meaning the zero delay coefficient is the last element.
 // For example the impulse response is [0, 0, ..., 1].
 typedef struct FirFilter {
-  const float* filter;
+  float* filter;
   const int filter_size;
 } FirFilter;
 
-inline FirFilter fir_init(const float* filter, int filter_size) {
+typedef struct FirFilterComplex {
+  float* filter_real;
+  float* filter_imag;
+  const int filter_size;
+} FirFilterComplex;
+
+inline FirFilter fir_init(float* filter, int filter_size) {
   return {filter, filter_size};
+}
+
+inline FirFilterComplex fir_complex_init(float* filter_real,
+                                         float* filter_imag,
+                                         int filter_size) {
+  return {filter_real, filter_imag, filter_size};
 }
 
 // FIR filter using a double buffer. The double buffer is assumed to be of at
@@ -35,4 +47,4 @@ inline void fir_filtering(const DoubleBuffer* double_buffer, int input_length,
   }
 }
 
-#endif  // SIGNAL_PROCESSING_FILTER_H
+#endif  // SIGNAL_PROCESSING__FILTER_H_
