@@ -11,14 +11,14 @@ typedef struct FirFilter {
   const int filter_size;
 } FirFilter;
 
-FirFilter fir_init(const float* filter, int filter_size) {
+inline FirFilter fir_init(const float* filter, int filter_size) {
   return {filter, filter_size};
 }
 
 // FIR filter using a double buffer. The double buffer is assumed to be of at
 // least length input_length + filter_size - 1.
-void fir_filter(const DoubleBuffer* double_buffer, int input_length,
-                const FirFilter* fir_filter, float* y) {
+inline void fir_filtering(const DoubleBuffer* double_buffer, int input_length,
+                          const FirFilter* fir_filter, float* y) {
   const float* buffer = double_buffer->buffer;
   const int buffer_size = double_buffer->size;
   const float* h = fir_filter->filter;
