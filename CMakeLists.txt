@@ -16,6 +16,7 @@ add_executable(
         signal_processing
         buffer.h
         filter.h
+        least_mean_squares.h
 )
 
 set_target_properties(signal_processing PROPERTIES LINKER_LANGUAGE C)
@@ -25,6 +26,7 @@ add_executable(
         unit_tests
         buffer_test.cpp
         filter_test.cpp
+        least_mean_squares_test.cpp
 )
 
 set_target_properties(unit_tests PROPERTIES LINKER_LANGUAGE CXX)
