@@ -13,7 +13,7 @@ include_directories(gtest/include)
 include_directories(.)
 
 # Main executable.
-add_executable(
+add_library(
         ${This}
         buffer.h
         filter.h
