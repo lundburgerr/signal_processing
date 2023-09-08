@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
-project(signal_processing C CXX)
+set(This signal_processing)
+project(${This} C CXX)
 find_package(GTest CONFIG REQUIRED)
 
 set(CMAKE_C_STANDARD 99)
@@ -13,27 +14,28 @@ include_directories(.)
 
 # Main executable.
 add_executable(
-        signal_processing
+        ${This}
         buffer.h
         filter.h
         least_mean_squares.h
 )
 
-set_target_properties(signal_processing PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(${This} PROPERTIES LINKER_LANGUAGE C)
 
 # Add tests.
+set(UnitTests ${This}_unit_tests)
 add_executable(
-        unit_tests
+        ${UnitTests}
         buffer_test.cpp
         filter_test.cpp
         least_mean_squares_test.cpp
 )
 
-set_target_properties(unit_tests PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(${UnitTests} PROPERTIES LINKER_LANGUAGE CXX)
 
-target_link_libraries(unit_tests
+target_link_libraries(${UnitTests}
         GTest::gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(unit_tests)
+gtest_discover_tests(${UnitTests})
