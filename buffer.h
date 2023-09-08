@@ -29,7 +29,8 @@ inline DoubleBuffer double_buffer_init(float* buffer, int size) {
     buffer[i] = 0;
   }  // Input buffer has length 2*size.
      // Creates a double buffer and sets all buffer values to zero.
-  return {buffer, size, /*oldest*/ 0};
+  DoubleBuffer double_buffer = {buffer, size, /*oldest*/ 0};
+  return double_buffer;
 }
 
 // Input buffers has length 2*size.
@@ -41,7 +42,9 @@ inline DoubleBufferComplex double_buffer_complex_init(float* buffer_real,
     buffer_real[i] = 0;
     buffer_imag[i] = 0;
   }
-  return {buffer_real, buffer_imag, size, /*oldest*/ 0};
+
+  DoubleBufferComplex double_buffer = {buffer_real, buffer_imag, size, /*oldest*/ 0};
+  return double_buffer;
 }
 
 // Input buffer has length 4*size.
@@ -51,7 +54,9 @@ inline DoubleBufferComplexInterleaved double_buffer_complex_interleaved_init(
   for (int i = 0; i < 4 * size; ++i) {
     buffer_interleaved[i] = 0;
   }
-  return {buffer_interleaved, size, /*oldest*/ 0};
+
+  DoubleBufferComplexInterleaved double_buffer = {buffer_interleaved, size, /*oldest*/ 0};
+  return double_buffer;
 }
 
 // Update the buffer with the new input.

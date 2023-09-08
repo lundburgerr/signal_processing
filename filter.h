@@ -23,7 +23,9 @@ inline FirFilter fir_init(float* filter, int filter_size) {
 
 inline FirFilterComplex fir_complex_init(float* filter_real, float* filter_imag,
                                          int filter_size) {
-  return {filter_real, filter_imag, filter_size};
+
+  FirFilterComplex fir_filter = {filter_real, filter_imag, filter_size};
+  return fir_filter;
 }
 
 // FIR filter using a double buffer. The double buffer is assumed to be of at
