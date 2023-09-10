@@ -18,6 +18,7 @@ add_library(
         buffer.h
         filter.h
         least_mean_squares.h
+        simple_math.h
 )
 
 set_target_properties(${This} PROPERTIES LINKER_LANGUAGE C)

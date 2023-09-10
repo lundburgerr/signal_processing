@@ -1,6 +1,8 @@
 #ifndef SIGNAL_PROCESSING__BUFFER_H_
 #define SIGNAL_PROCESSING__BUFFER_H_
 
+#include "simple_math.h"
+
 typedef struct DoubleBuffer {
   float* buffer;  // Size is 2*size.
   const int size;
@@ -69,11 +71,21 @@ static inline void double_buffer_update(const float* x, int in_size,
   int buffer_size = double_buffer->size;
   int start = double_buffer->oldest;
   float* buffer = double_buffer->buffer;
+
+  // Fill in the entire new buffer to the double buffer. We can fill it once
+  // without worrying about wrapping since it is a double buffer.
   for (int i = 0; i < in_size; ++i) {
     buffer[start + i] = x[i];
   }
-  for (int i = 0; i < in_size; ++i) {
+
+  // Fill in the extra duplicate elements in the double buffer, taking into
+  // consideration the case if we are wrapping.
+  int wrap_end = MIN(in_size, buffer_size - start);
+  for (int i = 0; i < wrap_end; ++i) {
     buffer[buffer_size + start + i] = x[i];
+  }
+  for (int i = 0; i < in_size - wrap_end; ++i) {
+    buffer[i] = x[wrap_end + i];
   }
   double_buffer->oldest = (start + in_size) % buffer_size;
 }
@@ -85,13 +97,24 @@ static inline void double_buffer_complex_update(
   int start = double_buffer->oldest;
   float* buffer_real = double_buffer->buffer_real;
   float* buffer_imag = double_buffer->buffer_imag;
+
+  // Fill in the entire new buffer to the double buffer. We can fill it once
+  // without worrying about wrapping since it is a double buffer.
   for (int i = 0; i < in_size; ++i) {
     buffer_real[start + i] = x_real[i];
     buffer_imag[start + i] = x_imag[i];
   }
-  for (int i = 0; i < in_size; ++i) {
+
+  // Fill in the extra duplicate elements in the double buffer, taking into
+  // consideration the case if we are wrapping.
+  int wrap_end = MIN(in_size, buffer_size - start);
+  for (int i = 0; i < wrap_end; ++i) {
     buffer_real[buffer_size + start + i] = x_real[i];
     buffer_imag[buffer_size + start + i] = x_imag[i];
+  }
+  for (int i = 0; i < in_size - wrap_end; ++i) {
+    buffer_real[i] = x_real[wrap_end + i];
+    buffer_imag[i] = x_imag[wrap_end + i];
   }
   double_buffer->oldest = (start + in_size) % buffer_size;
 }
@@ -102,13 +125,24 @@ static inline void double_buffer_complex_interleaved_update(
   int buffer_size = double_buffer->size;
   int start = double_buffer->oldest;
   float* buffer_interleaved = double_buffer->buffer_interleaved;
+
+  // Fill in the entire new buffer to the double buffer. We can fill it once
+  // without worrying about wrapping since it is a double buffer.
   for (int i = 0; i < in_size; ++i) {
     buffer_interleaved[2 * i + start] = x_real[i];
     buffer_interleaved[2 * i + start + 1] = x_imag[i];
   }
-  for (int i = 0; i < in_size; ++i) {
+
+  // Fill in the extra duplicate elements in the double buffer, taking into
+  // consideration the case if we are wrapping.
+  int wrap_end = MIN(in_size, buffer_size - start);
+  for (int i = 0; i < wrap_end; ++i) {
     buffer_interleaved[2 * buffer_size + 2 * i + start] = x_real[i];
     buffer_interleaved[2 * buffer_size + 2 * i + start + 1] = x_imag[i];
+  }
+  for (int i = 0; i < in_size - wrap_end; ++i) {
+    buffer_interleaved[2 * i] = x_real[wrap_end + i];
+    buffer_interleaved[2 * i + 1] = x_imag[wrap_end + i];
   }
   double_buffer->oldest = (start + 2 * in_size) % (2 * buffer_size);
 }
