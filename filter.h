@@ -17,21 +17,22 @@ typedef struct FirFilterComplex {
   const int filter_size;
 } FirFilterComplex;
 
-inline FirFilter fir_init(float* filter, int filter_size) {
+static inline FirFilter fir_init(float* filter, int filter_size) {
   return {filter, filter_size};
 }
 
-inline FirFilterComplex fir_complex_init(float* filter_real, float* filter_imag,
-                                         int filter_size) {
-
+static inline FirFilterComplex fir_complex_init(float* filter_real,
+                                                float* filter_imag,
+                                                int filter_size) {
   FirFilterComplex fir_filter = {filter_real, filter_imag, filter_size};
   return fir_filter;
 }
 
 // FIR filter using a double buffer. The double buffer is assumed to be of at
 // least length input_length + filter_size - 1.
-inline void fir_filtering(const DoubleBuffer* double_buffer, int input_length,
-                          const FirFilter* fir_filter, float* y) {
+static inline void fir_filtering(const DoubleBuffer* double_buffer,
+                                 int input_length, const FirFilter* fir_filter,
+                                 float* y) {
   const float* buffer = double_buffer->buffer;
   const int buffer_size = double_buffer->size;
   const float* h = fir_filter->filter;
@@ -48,10 +49,9 @@ inline void fir_filtering(const DoubleBuffer* double_buffer, int input_length,
   }
 }
 
-inline void fir_filtering_complex(const DoubleBufferComplex* double_buffer,
-                                  int input_length,
-                                  const FirFilterComplex* fir_filter,
-                                  float* y_real, float* y_imag) {
+static inline void fir_filtering_complex(
+    const DoubleBufferComplex* double_buffer, int input_length,
+    const FirFilterComplex* fir_filter, float* y_real, float* y_imag) {
   const float* buffer_real = double_buffer->buffer_real;
   const float* buffer_imag = double_buffer->buffer_imag;
   const int buffer_size = double_buffer->size;

@@ -24,7 +24,7 @@ typedef struct DoubleBufferComplexInterleaved {
 
 // Input buffer has length 2*size.
 // Creates a double buffer and sets all buffer values to zero.
-inline DoubleBuffer double_buffer_init(float* buffer, int size) {
+static inline DoubleBuffer double_buffer_init(float* buffer, int size) {
   for (int i = 0; i < 2 * size; ++i) {
     buffer[i] = 0;
   }  // Input buffer has length 2*size.
@@ -35,35 +35,37 @@ inline DoubleBuffer double_buffer_init(float* buffer, int size) {
 
 // Input buffers has length 2*size.
 // Creates a double buffer and sets all buffer values to zero.
-inline DoubleBufferComplex double_buffer_complex_init(float* buffer_real,
-                                                      float* buffer_imag,
-                                                      int size) {
+static inline DoubleBufferComplex double_buffer_complex_init(float* buffer_real,
+                                                             float* buffer_imag,
+                                                             int size) {
   for (int i = 0; i < 2 * size; ++i) {
     buffer_real[i] = 0;
     buffer_imag[i] = 0;
   }
 
-  DoubleBufferComplex double_buffer = {buffer_real, buffer_imag, size, /*oldest*/ 0};
+  DoubleBufferComplex double_buffer = {buffer_real, buffer_imag, size,
+                                       /*oldest*/ 0};
   return double_buffer;
 }
 
 // Input buffer has length 4*size.
 // Creates a double buffer and sets all buffer values to zero.
-inline DoubleBufferComplexInterleaved double_buffer_complex_interleaved_init(
-    float* buffer_interleaved, int size) {
+static inline DoubleBufferComplexInterleaved
+double_buffer_complex_interleaved_init(float* buffer_interleaved, int size) {
   for (int i = 0; i < 4 * size; ++i) {
     buffer_interleaved[i] = 0;
   }
 
-  DoubleBufferComplexInterleaved double_buffer = {buffer_interleaved, size, /*oldest*/ 0};
+  DoubleBufferComplexInterleaved double_buffer = {buffer_interleaved, size,
+                                                  /*oldest*/ 0};
   return double_buffer;
 }
 
 // Update the buffer with the new input.
 // The length in_size of the new input has to be less than or equal to the size
 // of the buffer.
-inline void double_buffer_update(const float* x, int in_size,
-                                 DoubleBuffer* double_buffer) {
+static inline void double_buffer_update(const float* x, int in_size,
+                                        DoubleBuffer* double_buffer) {
   int buffer_size = double_buffer->size;
   int start = double_buffer->oldest;
   float* buffer = double_buffer->buffer;
@@ -76,9 +78,9 @@ inline void double_buffer_update(const float* x, int in_size,
   double_buffer->oldest = (start + in_size) % buffer_size;
 }
 
-inline void double_buffer_complex_update(const float* x_real,
-                                         const float* x_imag, int in_size,
-                                         DoubleBufferComplex* double_buffer) {
+static inline void double_buffer_complex_update(
+    const float* x_real, const float* x_imag, int in_size,
+    DoubleBufferComplex* double_buffer) {
   int buffer_size = double_buffer->size;
   int start = double_buffer->oldest;
   float* buffer_real = double_buffer->buffer_real;
@@ -94,7 +96,7 @@ inline void double_buffer_complex_update(const float* x_real,
   double_buffer->oldest = (start + in_size) % buffer_size;
 }
 
-inline void double_buffer_complex_interleaved_update(
+static inline void double_buffer_complex_interleaved_update(
     const float* x_real, const float* x_imag, int in_size,
     DoubleBufferComplexInterleaved* double_buffer) {
   int buffer_size = double_buffer->size;

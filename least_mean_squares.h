@@ -3,9 +3,9 @@
 
 #include "filter.h"
 
-inline void lms(FirFilterComplex* filter_state, const float* x_real,
-                const float* x_imag, float error_real, float error_imag,
-                float step_size) {
+static inline void lms(FirFilterComplex* filter_state, const float* x_real,
+                       const float* x_imag, float error_real, float error_imag,
+                       float step_size) {
   float* h_real = filter_state->filter_real;
   float* h_imag = filter_state->filter_imag;
   int filter_size = filter_state->filter_size;
@@ -18,9 +18,9 @@ inline void lms(FirFilterComplex* filter_state, const float* x_real,
 }
 
 // TODO: Implement adaptive step size.
-inline float adaptive_step_size(const float* x_real, const float* x_imag,
-                                float x_power, float error_real,
-                                float error_imag) {
+static inline float adaptive_step_size(const float* x_real, const float* x_imag,
+                                       float x_power, float error_real,
+                                       float error_imag) {
   return 1.0;
 }
 
