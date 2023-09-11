@@ -135,7 +135,7 @@ static inline void double_buffer_complex_interleaved_update(
 
   // Fill in the extra duplicate elements in the double buffer, taking into
   // consideration the case if we are wrapping.
-  int wrap_end = MIN(in_size, buffer_size - start);
+  int wrap_end = MIN(in_size, buffer_size - (start >> 1));
   for (int i = 0; i < wrap_end; ++i) {
     buffer_interleaved[2 * buffer_size + 2 * i + start] = x_real[i];
     buffer_interleaved[2 * buffer_size + 2 * i + start + 1] = x_imag[i];
