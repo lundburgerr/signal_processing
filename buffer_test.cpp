@@ -134,7 +134,38 @@ TEST(DoubleBufferComplexInterleavedTest, update) {
                                   -4.0, 5.0,  -5.0, 6.0,  -6.0, 7.0,  -7.0,
                                   3.0,  -3.0, 4.0,  -4.0, 5.0,  -5.0};
   EXPECT_EQ(double_buffer.oldest, 4);
+  EXPECT_THAT(expected2,
+              ElementsAreArray(double_buffer.buffer_interleaved, 20));
+}
+
+TEST(DoubleBufferComplexInterleaved2Test, update) {
+  int size = 5;
+  std::vector<float> buffer_interleaved(4 * size, 1.0f);
+  DoubleBufferComplexInterleaved double_buffer =
+      double_buffer_complex_interleaved_init(buffer_interleaved.data(), size);
+  EXPECT_EQ(double_buffer.size, size);
+
+  // Fill in values without wrapping.
+  std::vector<float> x_interleaved = {1.0, -1.0, 2.0, -2.0, 3.0, -3.0};
+  double_buffer_complex_interleaved_update2(x_interleaved.data(),
+                                            /*in_size=*/3, &double_buffer);
+  std::vector<float> expected = {1.0, -1.0, 2.0, -2.0, 3.0,  -3.0, 0.0,
+                                 0.0, 0.0,  0.0, 1.0,  -1.0, 2.0,  -2.0,
+                                 3.0, -3.0, 0.0, 0.0,  0.0,  0.0};
+  EXPECT_EQ(double_buffer.oldest, 6);
   EXPECT_THAT(expected, ElementsAreArray(double_buffer.buffer_interleaved, 20));
+
+  // Fill in values with wrapping.
+  std::vector<float> x_interleaved2 = {4.0, -4.0, 5.0, -5.0,
+                                       6.0, -6.0, 7.0, -7.0};
+  double_buffer_complex_interleaved_update2(x_interleaved2.data(),
+                                            /*in_size=*/4, &double_buffer);
+  std::vector<float> expected2 = {6.0,  -6.0, 7.0,  -7.0, 3.0,  -3.0, 4.0,
+                                  -4.0, 5.0,  -5.0, 6.0,  -6.0, 7.0,  -7.0,
+                                  3.0,  -3.0, 4.0,  -4.0, 5.0,  -5.0};
+  EXPECT_EQ(double_buffer.oldest, 4);
+  EXPECT_THAT(expected2,
+              ElementsAreArray(double_buffer.buffer_interleaved, 20));
 }
 
 }  // namespace
