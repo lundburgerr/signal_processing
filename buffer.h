@@ -147,4 +147,33 @@ static inline void double_buffer_complex_interleaved_update(
   double_buffer->oldest = (start + 2 * in_size) % (2 * buffer_size);
 }
 
+static inline void double_buffer_complex_interleaved_update2(
+    const float* x_interleaved, int in_size,
+    DoubleBufferComplexInterleaved* double_buffer) {
+  int buffer_size = double_buffer->size;
+  int start = double_buffer->oldest;
+  float* buffer_interleaved = double_buffer->buffer_interleaved;
+
+  // Fill in the entire new buffer to the double buffer. We can fill it once
+  // without worrying about wrapping since it is a double buffer.
+  for (int i = 0; i < in_size; ++i) {
+    buffer_interleaved[2 * i + start] = x_interleaved[2 * i];
+    buffer_interleaved[2 * i + start + 1] = x_interleaved[2 * i + 1];
+  }
+
+  // Fill in the extra duplicate elements in the double buffer, taking into
+  // consideration the case if we are wrapping.
+  int wrap_end = MIN(in_size, buffer_size - (start >> 1));
+  for (int i = 0; i < wrap_end; ++i) {
+    buffer_interleaved[2 * buffer_size + 2 * i + start] = x_interleaved[2 * i];
+    buffer_interleaved[2 * buffer_size + 2 * i + start + 1] =
+        x_interleaved[2 * i + 1];
+  }
+  for (int i = 0; i < in_size - wrap_end; ++i) {
+    buffer_interleaved[2 * i] = x_interleaved[2 * wrap_end + 2 * i];
+    buffer_interleaved[2 * i + 1] = x_interleaved[2 * wrap_end + 2 * i + 1];
+  }
+  double_buffer->oldest = (start + 2 * in_size) % (2 * buffer_size);
+}
+
 #endif  // SIGNAL_PROCESSING__BUFFER_H_
